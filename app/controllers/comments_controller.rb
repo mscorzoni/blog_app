@@ -3,13 +3,15 @@ class CommentsController < ApplicationController
 
   def create
     unless current_user
-      flash[:alert] = 'Please sign ir or sign up first'
+      flash[:alert] = 'Please sign in or sign up first'
       redirect_to new_user_session_path
     else  
       @comment = @article.comments.build(comment_params)
       @comment.user = current_user
 
       if @comment.save
+        ActionCable.server.broadcast "comments", 
+        render(partial: 'comments/comment', object: @comment)
         flash[:notice] = 'Comment has been created'
       else
         flash.now[:alert] = 'Comment has not been created'

@@ -1,5 +1,5 @@
 Warden::Manager.after_set_user do |user, auth, opts|
-  scope = apts[:scope]
+  scope = opts[:scope]
   auth.cookies.signed["#{scope}.id"] = user.id
 end
 
